@@ -23,7 +23,7 @@ n = 30;
 for dataset = 1:n
 
 rates_vector = dataset_classification_results(...
-                segmentation_view, shape_view, rgb_view, data_labels, k);
+    segmentation_view, shape_view, rgb_view, data_labels, classes, k);
 
 
 
