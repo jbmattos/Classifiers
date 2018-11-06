@@ -2,28 +2,31 @@ function [posteriori_probability_matrix, rate] = ...
                                       bayes_classifier(train,test,classes)
 %bayes_classifier: gaussian bayesian classifier
 %   Decision rule: maximum posterior probability of all classes
-%   Return: posteriori probability and hit rate
-
+%   Return: posteriori probability and hits number
+    
+    %global variables
     exemples = size(test,1);
     c = size(classes,1);
-
+    posteriori_probability_matrix = zeros(exemples,c);
+    
+    % model fitting for bayes classifier
     [class_means, class_cov] = fit_model(train, classes);
     prior_probabilities = get_prior_probabilities(train, classes);
 
-    posteriori_probability_matrix = zeros(exemples,c);
-
+    % get posterior probabilities for bayes decision rule
     for ex = 1:exemples
 
         exemple = test(ex,:);
         prob = get_posterior_probabilities(prior_probabilities,class_means,...
                                              class_cov, exemple);
         posteriori_probability_matrix(ex,:) = prob;
-
     end
-
+    
+    % classification
     predicted_classes = classify(posteriori_probability_matrix,classes);
     real_classes = table2array(test(:,1));
-
+    
+    % get classifier total number of hits 
     count_hits = 0;
     for ex =1:exemples
        if predicted_classes(ex) == real_classes(ex)
@@ -95,7 +98,7 @@ function [posterior_probabilities] = get_posterior_probabilities(...
                                 class_cov, exemple)
 %get_posterior_probabilities: calculates the posterior probability of all
 %classes to an exemple of test data
-%   Return: vector of prior probabilities
+%   Return: vector of posterior probabilities
 
     exemple_data = table2array(exemple(1,2:end));
     d = size(exemple_data,2);
