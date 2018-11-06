@@ -24,7 +24,7 @@ function [rate] = ensemble_classifier(train,test,posterior_prob,no_of_views,clas
         exemple_probs_matrix = zeros(no_of_classifiers,c);  % dimentions: (classifier,classes)
         for classifier = 1:no_of_classifiers
             classifier_exemple_prob = posterior_prob{classifier}(exemple,:);
-            exemple_probs_matrix(classifier) = classifier_exemple_prob;
+            exemple_probs_matrix(classifier,:) = classifier_exemple_prob;
         end
         
         % generates the objective function for each class given an new exemple
@@ -39,7 +39,7 @@ function [rate] = ensemble_classifier(train,test,posterior_prob,no_of_views,clas
         [max_prob,max_idx] = max(objective_function);
         predicted_class = classes(max_idx);
         
-        real_class = table2array(test(exemple,1));
+        real_class = string(table2array(test(exemple,1)));
         
         % count classifier total number of hits 
         if predicted_class == real_class

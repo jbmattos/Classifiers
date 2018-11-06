@@ -1,5 +1,5 @@
-function [rates_vector] = dataset_classification_results(view1, view2, view3,...
-                            data_labels, classes, k)
+function [rates_vector] = dataset_classification_results(view1,view2,view3,...
+                            data_labels,classes,k,n)
 %dataset_classification_results: train and validates all bayes, knn and
 %ensemble classifiers using stratified 10-fold cross-validation.
 %   Return: hit rates of all classifiers
@@ -47,6 +47,11 @@ function [rates_vector] = dataset_classification_results(view1, view2, view3,...
     end
 
     rates_vector = hits_vector/no_of_exemples;
+    
+    file_name = ['generated_data_Dataset_',num2str(n)];
+    save(file_name,'k_fold_idx','training_view1','test_view1','training_view2','test_view2',...
+                   'training_view3','test_view3','posterior_prob','hits_vector','rates_vector');
+
 end
 
 
