@@ -2,7 +2,8 @@ function [posteriori_probability_matrix, rate] = ...
                                       bayes_classifier(train,test,classes)
 %bayes_classifier: gaussian bayesian classifier
 %   Decision rule: maximum posterior probability of all classes
-%   Return: posteriori probability and hits number
+%   Return: posteriori probability and number of hits achieved with test
+%           data
     
     %global variables
     exemples = size(test,1);

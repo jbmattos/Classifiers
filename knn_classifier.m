@@ -2,7 +2,8 @@ function [posterior_probability_matrix,rate] = knn_classifier(train_dataset,test
 %knn_classifier: k - nearest neighbors classifier
 %   Validation data: 20% of training data used to adjust k- value
 %   Posterior prob.: (nº of neighbors of a given class)/(total nº of neighbors)
-%   Return: posteriori probability and hit rate
+%   Return: posteriori probability and number of hits achieved with test
+%           data
     
     
     % Global variables
@@ -26,7 +27,7 @@ function [posterior_probability_matrix,rate] = knn_classifier(train_dataset,test
     count_hits = 0;
     for new_exemple = 1:no_of_exemples
         
-        exemple = test_dataset(new_exemple,2:end);
+        exemple = table2array(test_dataset(new_exemple,2:end));
         distances_vector = get_euclidian_distances(exemple,train_dataset);
         
         [class,classes_freq] = classify(best_k,train_dataset,distances_vector,classes);
@@ -73,7 +74,8 @@ function [best_k] = get_classifier_gs(training,validation,k_min,k_max,classes)
     for val_exemple = 1:no_of_val_exemples
         
         % compute distance from exemple to each case in training data
-        exemple = validation(val_exemple,2:end);
+        exemple = table2array(validation(val_exemple,2:end));
+        exemple_class = string(table2array(validation(val_exemple,1)));
         distances_vector = get_euclidian_distances(exemple,training);
                 
         % k- parameter grid search: generate 'n' classifiers
@@ -86,9 +88,8 @@ function [best_k] = get_classifier_gs(training,validation,k_min,k_max,classes)
         end
         
         % compute the hits for each 'n'-classifier 
-        exemple_real_class = exemple(1,1);
         for idx = 1:k_search_size
-            if classifiers{idx,2} == exemple_real_class
+            if classifiers{idx,2} == exemple_class
                 hits_vector(idx) = hits_vector(idx) + 1;
             end
             idx = idx + 1;
@@ -110,7 +111,7 @@ function [distances_vector] = get_euclidian_distances(exemple,training)
 
     for case_idx = 1:cases
 
-        train_case = training(case_idx,2:end);
+        train_case = table2array(training(case_idx,2:end));
         dist = sum((exemple - train_case).^2);  % euclidian distance
         distances_vector(case_idx) = dist;   
 
@@ -129,7 +130,7 @@ function [predicted_class,classes_freq] = classify(k,training,distances_vector,c
     neighbors_classes = strings(1,k);
     for neighbor = 1:k
         neighbor_idx = k_min_idx(neighbor);
-        neighbor_class = training(neighbor_idx,1);
+        neighbor_class = table2array(training(neighbor_idx,1));
         neighbors_classes(neighbor) = neighbor_class;
     end
     

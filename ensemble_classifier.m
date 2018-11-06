@@ -1,11 +1,16 @@
-function [hits] = ensemble_classifier(...
-posterior_bayes_view1,posterior_bayes_view2,posterior_bayes_view3...
-posterior_knn_view1,posterior_knn_view2,posterior_knn_view3)
-%UNTITLED6 Summary of this function goes here
-%   Detailed explanation goes here
+function [rate] = ensemble_classifier(posterior_prob,no_of_views)
+%ensemble_classifier: classifier based on bayes and knn classifiers.
+%   Decision rule: maximum between all classes:
+%           (1-L).P(w) + L.max(posterior_probabilities)
+%   Variables: 
+%       L -> number of views
+%       posterior_probabilities -> of bayes and knn classifiers
+%                                  applied to all views.
+%   Return: number of hits achieved with test data
 
 
-outputArg1 = inputArg1;
-outputArg2 = inputArg2;
+
+
+
+
 end
-
