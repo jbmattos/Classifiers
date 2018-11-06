@@ -41,7 +41,7 @@ function [rates_vector] = dataset_classification_results(view1, view2, view3,...
         [posterior_prob{6},hits6] = knn_classifier(training_view3,test_view3,classes);
         hits_vector(6) = hits_vector(6) + hits6;
 
-        [hits7] = ensemble_classifier(posterior_prob,no_of_views);
+        [hits7] = ensemble_classifier(training_view1,test_view1,posterior_prob,no_of_views,classes);
         hits_vector(7) = hits_vector(7) + hits7;
 
     end
