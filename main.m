@@ -31,4 +31,6 @@ rates_matrix(dataset,:) = rates_vector;
 
 end
 
+file_name = ['generated_data_30times_complete'];
+save(file_name,'rates_matrix');
 

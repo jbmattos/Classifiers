@@ -18,8 +18,8 @@ function [posterior_probability_matrix,rate] = knn_classifier(train_dataset,test
     [training_data,validation_data] = split_data(train_dataset,training_idx,validation_idx);
     
     % k best value's search grid
-    k_min = 5;
-    k_max = 60;
+    k_min = 1;
+    k_max = 10;
     best_k = get_classifier_gs(training_data,validation_data,k_min,k_max,classes);
     
     % classification
@@ -63,41 +63,45 @@ function [best_k] = get_classifier_gs(training,validation,k_min,k_max,classes)
 %grid search
 %   Return: knn classifier k- parameter
         
-
     no_of_val_exemples = size(validation,1);
-    k_search_size = k_max - k_min + 1;
-    
-    classifiers = cell(k_search_size,2);
-    hits_vector = zeros(1,k_search_size);
-    
-    % classification of each exemple on validation data
-    for val_exemple = 1:no_of_val_exemples
+    best_k = 0;
+    best_hit = 0;
+    stagnation_test = 0;
+
+    for k = k_min:k_max
         
-        % compute distance from exemple to each case in training data
-        exemple = table2array(validation(val_exemple,2:end));
-        exemple_class = string(table2array(validation(val_exemple,1)));
-        distances_vector = get_euclidian_distances(exemple,training);
-                
-        % k- parameter grid search: generate 'n' classifiers
-        idx = 1;
-        for k = k_min:k_max
-            [class,classes_freq] = classify(k,training,distances_vector,classes);
-            classifiers{idx,1} = k;
-            classifiers{idx,2} = class;
-            idx = idx + 1;
+        if stagnation_test == 3
+            break
         end
         
-        % compute the hits for each 'n'-classifier 
-        for idx = 1:k_search_size
-            if classifiers{idx,2} == exemple_class
-                hits_vector(idx) = hits_vector(idx) + 1;
-            end
-            idx = idx + 1;
+        count_hits = 0;
+        predicted_classes = strings(no_of_val_exemples,1);
+        real_classes = string(table2array(validation(:,1)));
+        
+        % classification of each exemple on validation data
+        for val_exemple = 1:no_of_val_exemples
+
+            % compute distance from exemple to each case in training data
+            exemple = table2array(validation(val_exemple,2:end));
+            distances_vector = get_euclidian_distances(exemple,training);
+
+            % knn classification
+            [class,classes_freq] = classify(k,training,distances_vector,classes);
+            predicted_classes(val_exemple) = class;
+        end
+
+        % compute the hits of the knn classifier
+        count_hits = size(find(predicted_classes == real_classes),1);
+        
+        % check for improvment considering k value
+        if count_hits > best_hit
+            best_k = k;
+            best_hit = count_hits;
+            stagnation_test = 0;
+        else
+            stagnation_test = stagnation_test + 1;
         end
     end
-    
-    [max_hits,maximum_idx] = max(hits_vector);
-    best_k = classifiers{maximum_idx,1};  
 end
 
 % GET_EUCLIDIAN_DISTANCES:
