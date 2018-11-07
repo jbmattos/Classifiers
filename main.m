@@ -25,7 +25,7 @@ rates_matrix = zeros(n,7);
 for dataset = 1:n
 
 rates_vector = dataset_classification_results(...
-    segmentation_view,shape_view,rgb_view,data_labels,classes,k,n);
+    segmentation_view,shape_view,rgb_view,data_labels,classes,k,dataset);
 
 rates_matrix(dataset,:) = rates_vector;
 
