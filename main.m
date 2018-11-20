@@ -22,7 +22,7 @@ n = 30;
 % generates 30 different datasets and return its hit rate
 
 rates_matrix = zeros(n,7);
-for dataset = 1:n
+for dataset = 21:n
 
 rates_vector = dataset_classification_results(...
     segmentation_view,shape_view,rgb_view,data_labels,classes,k,dataset);
@@ -31,6 +31,4 @@ rates_matrix(dataset,:) = rates_vector;
 
 end
 
-file_name = ['generated_data_30times_complete'];
-save(file_name,'rates_matrix');
 

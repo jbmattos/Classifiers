@@ -74,7 +74,6 @@ function [best_k] = get_classifier_gs(training,validation,k_min,k_max,classes)
             break
         end
         
-        count_hits = 0;
         predicted_classes = strings(no_of_val_exemples,1);
         real_classes = string(table2array(validation(:,1)));
         
